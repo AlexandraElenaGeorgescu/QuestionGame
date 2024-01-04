@@ -17,17 +17,19 @@ namespace GameAppApi.Authentification.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationDto registration)
+        public async Task<IActionResult> Register([FromBody] User registration)
         {
-            var userExists = _userService.GetUserByUsername(registration.User.Username);
+            var userExists = _userService.GetUserByUsername(registration.Username);
             if (userExists != null)
             {
                 return BadRequest("User already exists.");
             }
 
-            registration.User.Role = registration.Role;
+            registration.Role = registration.Role;
+            registration.Id = Guid.NewGuid();
 
-            var createdUser = await _userService.CreateUser(registration.User);
+
+            var createdUser = await _userService.CreateUser(registration);
             if (createdUser == null)
             {
                 return BadRequest("User could not be created.");
@@ -36,8 +38,9 @@ namespace GameAppApi.Authentification.Controllers
             return Ok(new { userId = createdUser.Id });
         }
 
+
         [HttpPost("login")]
-        public IActionResult Login(User loginUser)
+        public IActionResult Login([FromBody] User loginUser)
         {
             var user = _userService.GetUserByUsername(loginUser.Username);
             if (user == null || loginUser.Password != user.Password)

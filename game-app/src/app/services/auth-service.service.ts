@@ -1,20 +1,27 @@
-// auth.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
+// auth.service.ts
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loginUrl = 'api/auth/login';
+  private baseUrl = 'https://localhost:7173/Auth';
+  
+  readonly httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+    })
+  }
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(this.loginUrl, credentials);
-  }
-  register(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post('/api/auth/register', credentials);
+  login(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, JSON.stringify(user), this.httpOptions);
+  }  
+
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register`,  JSON.stringify(user), this.httpOptions);
   }  
 }

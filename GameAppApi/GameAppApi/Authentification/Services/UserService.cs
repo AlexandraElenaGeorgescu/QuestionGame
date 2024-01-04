@@ -32,6 +32,7 @@ namespace GameAppApi.Authentification.Services
             {
                 _users.InsertOne(new User
                 {
+                    Id = Guid.NewGuid(),
                     Username = username,
                     Password = password, 
                     Role = Role.Moderator

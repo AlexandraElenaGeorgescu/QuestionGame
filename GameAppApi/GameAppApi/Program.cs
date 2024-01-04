@@ -1,39 +1,64 @@
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration;
 using GameAppApi.Authentification.DatabaseSettings;
-using GameAppApi.Authentification.Services; 
+using GameAppApi.Authentification.Services;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
 
-// Add MongoDB settings and services here
-builder.Services.Configure<MongoDBSettings>(
-    builder.Configuration.GetSection(nameof(MongoDBSettings)));
-builder.Services.AddSingleton<IMongoDBSettings>(sp =>
-    sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+// First, configure MongoDBSettings
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection(nameof(MongoDBSettings)));
+builder.Services.AddSingleton<IMongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
 
-// Add UserService to the container.
-builder.Services.AddScoped<UserService>(); 
+// Register your UserService
+builder.Services.AddScoped<UserService>();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CorsPolicy",
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();
+                      });
+});
+
+// Add MVC Controllers if you have any
+builder.Services.AddControllers();
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath, true); // The second parameter 'true' will suppress errors if the file is not found
+});
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+app.UseCors("CorsPolicy");
 
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllers();
 
 // Seed the moderator account
 SeedModerator(app.Services, builder.Configuration);

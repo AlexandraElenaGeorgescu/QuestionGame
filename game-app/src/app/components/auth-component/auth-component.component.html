@@ -1,7 +1,10 @@
 <div class="login-form-container">
-    <form (ngSubmit)="onSubmit()">
-      <input type="text" [(ngModel)]="credentials.username" name="username" placeholder="Username" required>
-      <input type="password" [(ngModel)]="credentials.password" name="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <form (ngSubmit)="onSubmit()"> 
+    <input type="text" [(ngModel)]="user.username" name="username" placeholder="Username" required>
+    <input type="password" [(ngModel)]="user.password" name="password" placeholder="Password" required>
+    <div>
+      <input type="checkbox" [(ngModel)]="isModerator" name="isModerator"> Log in as moderator
+    </div>
+    <button type="submit">Login</button> 
+  </form>
+</div>

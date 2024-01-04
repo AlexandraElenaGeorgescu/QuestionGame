@@ -1,5 +1,7 @@
+// auth-component.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
@@ -8,33 +10,37 @@ import { AuthService } from 'src/app/services/auth-service.service';
   styleUrls: ['./auth-component.component.css']
 })
 export class AuthComponentComponent {
-  credentials = {
-    username: '',
-    password: ''
+  user: User = {
+    username: "",
+    password: "",
+    role: ""
   };
-  
+  isModerator = false; 
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
-    this.authService.login(this.credentials).subscribe(
+    this.user.role = this.isModerator ? 'Moderator' : 'Player';
+    this.authService.login(this.user).subscribe(
       success => {
-        // Handle response here
-        this.router.navigate(['/']); // Navigate to the home page or dashboard
+        // Navigate based on role
+        if (success.role === 'Moderator') {
+          this.router.navigate(['/moderator-dashboard']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error => {
+        // If unauthorized, ask if they want to register
         const register = confirm('User not found. Do you want to register?');
         if (register) {
-          this.authService.register(this.credentials).subscribe(
+          this.authService.register(this.user).subscribe(
             success => {
-              // Handle successful registration
+              console.log('Registration successful', success);
+              this.router.navigate(['/dashboard']);
             },
-            error => {
-              // Handle registration error
-            }
           );
         }
       }
     );
   }
-  
 }
