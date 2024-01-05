@@ -30,7 +30,6 @@
     <Folder Include="Authentification\ControllerTests\" />
     <Folder Include="Authentification\ServiceTests\" />
     <Folder Include="Game\ControllerTests\" />
-    <Folder Include="Game\ServiceTests\" />
     <Folder Include="Questions\ControllerTests\" />
     <Folder Include="Questions\ServiceTests\" />
   </ItemGroup>
