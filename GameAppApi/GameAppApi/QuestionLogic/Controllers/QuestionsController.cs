@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class QuestionsController : ControllerBase
 {
-    private readonly QuestionService _questionService;
+    private readonly IQuestionService _questionService;
 
-    public QuestionsController(QuestionService questionService)
+    public QuestionsController(IQuestionService questionService)
     {
         _questionService = questionService;
     }

@@ -15,11 +15,11 @@ builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection(nam
 builder.Services.AddSingleton<IMongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
 
 // Register your UserService
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
-builder.Services.AddScoped<QuestionService>();
-builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -75,7 +75,7 @@ app.Run();
 static void SeedModerator(IServiceProvider services, IConfiguration configuration)
 {
     using var scope = services.CreateScope();
-    var userService = scope.ServiceProvider.GetRequiredService<UserService>();
+    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
     var moderatorUsername = configuration["ModeratorSettings:Username"];
     var moderatorPassword = configuration["ModeratorSettings:Password"];
 

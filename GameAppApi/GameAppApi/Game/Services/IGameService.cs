@@ -14,7 +14,8 @@ namespace GameAppApi.Game.Services
         Task Remove(GameObj gameIn);
         Task Remove(string id);
         public Task<ActionResult<PlayGameResponse>> PlayGame(string username, string userAnswer);
-
+        public Task<ActionResult> GetNextQuestionForUser(string username);
+        public Task<GameObj> StartNewGame(string username);
 
     }
 }

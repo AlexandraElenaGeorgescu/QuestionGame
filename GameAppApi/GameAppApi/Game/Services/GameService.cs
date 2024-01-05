@@ -11,9 +11,9 @@ namespace GameAppApi.Game.Services
     {
         private readonly IMongoCollection<GameObj> _games;
         private readonly List<IObserver> _observers = new List<IObserver>();
-        private readonly QuestionService _questionService;
+        private readonly IQuestionService _questionService;
 
-        public GameService(IMongoDBSettings settings, QuestionService questionService)
+        public GameService(IMongoDBSettings settings, IQuestionService questionService)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);

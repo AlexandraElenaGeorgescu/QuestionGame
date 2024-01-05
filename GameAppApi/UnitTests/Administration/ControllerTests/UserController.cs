@@ -1,73 +1,60 @@
-﻿using System;
+﻿using Xunit;
+using GameAppApi.UserAdministration.Controllers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GameAppApi.UserAdministration.Controllers;
-using GameAppApi.UserAdministration.Services;
-using GameAppApi.API.PublicModels;
-using Moq;
-using Xunit;
 using Microsoft.AspNetCore.Mvc;
+using GameAppApi.API.PublicModels;
 
 namespace GameAppApi.Tests.UserAdministration.Controllers
 {
     public class UserControllerTests
     {
-        private readonly Mock<AdminService> _mockAdminService;
         private readonly UserController _controller;
+        private readonly FakeAdminService _fakeAdminService;
 
         public UserControllerTests()
         {
-            // Mock the dependencies
-            _mockAdminService = new Mock<AdminService>();
-            // Instantiate the controller with the mocked service
-            _controller = new UserController(_mockAdminService.Object);
+            _fakeAdminService = new FakeAdminService();
+            _controller = new UserController(_fakeAdminService);
         }
 
         [Fact]
         public async Task GetAllUsers_ReturnsAllUsers()
         {
             // Arrange
-            var fakeUsers = new List<User>
-            {
-                new User { Id = Guid.NewGuid(), Username = "user1", Role = "Player" },
-                new User { Id = Guid.NewGuid(), Username = "user2", Role = "Moderator" }
-            };
-            _mockAdminService.Setup(service => service.GetAllUsers()).ReturnsAsync(fakeUsers);
+            var user1 = new User { Id = Guid.NewGuid(), Username = "user1" };
+            var user2 = new User { Id = Guid.NewGuid(), Username = "user2" };
+            _fakeAdminService.AddUser(user1);
+            _fakeAdminService.AddUser(user2);
 
             // Act
             var result = await _controller.GetAllUsers();
 
             // Assert
             var actionResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnValue = Assert.IsType<List<User>>(actionResult.Value);
-            Assert.Equal(2, returnValue.Count);
+            var users = Assert.IsType<List<User>>(actionResult.Value);
+            Assert.Equal(2, users.Count);
         }
 
         [Fact]
         public async Task DeleteUser_WhenUserExists_RemovesUserAndReturnsNoContent()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            var fakeUser = new User { Id = userId, Username = "user1", Role = "Player" };
-            _mockAdminService.Setup(service => service.GetUserById(userId.ToString())).ReturnsAsync(fakeUser);
-            _mockAdminService.Setup(service => service.Remove(userId.ToString())).Returns(Task.CompletedTask);
+            var user = new User { Id = Guid.NewGuid(), Username = "user1" };
+            _fakeAdminService.AddUser(user);
 
             // Act
-            var result = await _controller.DeleteUser(userId.ToString());
+            var result = await _controller.DeleteUser(user.Id.ToString());
 
             // Assert
             Assert.IsType<NoContentResult>(result);
-            _mockAdminService.Verify(service => service.Remove(userId.ToString()), Times.Once());
         }
 
         [Fact]
         public async Task DeleteUser_WhenUserDoesNotExist_ReturnsNotFound()
         {
-            // Arrange
-            _mockAdminService.Setup(service => service.GetUserById(It.IsAny<string>())).ReturnsAsync((User)null);
-
-            // Act
-            var result = await _controller.DeleteUser("nonexistent-id");
+            // Arrange & Act
+            var result = await _controller.DeleteUser(Guid.NewGuid().ToString());
 
             // Assert
             Assert.IsType<NotFoundResult>(result);

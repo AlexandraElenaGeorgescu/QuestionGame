@@ -11,9 +11,9 @@ namespace GameAppApi.UserAdministration.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly AdminService _adminService;
+        private readonly IAdminService _adminService;
 
-        public UserController(AdminService adminService)
+        public UserController(IAdminService adminService)
         {
             _adminService = adminService;
         }
