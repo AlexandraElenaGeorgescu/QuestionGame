@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Administration\ServiceTests\" />
     <Folder Include="Authentification\ControllerTests\" />
     <Folder Include="Authentification\ServiceTests\" />
     <Folder Include="Game\ControllerTests\" />
