@@ -28,7 +28,7 @@ namespace GameAppApi.UserAdministration.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _adminService.GetUserById(id); // Implement GetUserById in UserService
+            var user = await _adminService.GetUserById(id); 
             if (user == null)
             {
                 return NotFound();

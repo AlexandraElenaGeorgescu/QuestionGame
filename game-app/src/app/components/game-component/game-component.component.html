@@ -4,6 +4,8 @@
     <h2>{{ currentQuestion.text }}</h2>
     <input type="text" [(ngModel)]="userAnswer">
     <button (click)="submitAnswer()">Submit Answer</button>
+    <button (click)="startGame()">Start new game</button>
+
     <p>{{ message }}</p>
   </div>
 </div>

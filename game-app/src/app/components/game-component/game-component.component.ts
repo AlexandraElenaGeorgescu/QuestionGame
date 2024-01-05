@@ -15,6 +15,7 @@ export class GameComponentComponent implements OnInit {
   message: string = '';
   score: number = 0;
   username: string = ''; 
+  correctAnswer: string = '';
 
   constructor(private cdr: ChangeDetectorRef, private gameService: GameService, private authService: AuthService) { }
 
@@ -48,27 +49,54 @@ export class GameComponentComponent implements OnInit {
     );
   }  
 
-  submitAnswer(): void {
-    if(!this.userAnswer) {
-      this.message = "Please provide an answer.";
-      return;
-    }
+  resetGameState(): void {
+    // Reset game state logic here
+    this.score = 0;
+    this.currentQuestion = null;
+    // Call any other necessary services to reset the backend state if needed
+  }
 
-    this.gameService.submitAnswer(this.username, this.userAnswer).subscribe(
-      (data: any) => {  
-          const gameResponse = data.value;
-          this.score = gameResponse.game.score
-          if(gameResponse.isCorrectAnswer){
-              this.message = "Correct! Next question:";
-              this.getNextQuestion();
-          } else {
-              this.message = "Incorrect! Game over.";
-          }
+  // Called when the user clicks the 'Play' button
+  startGame(): void {
+    this.gameService.startGame(this.username).subscribe(
+      (game: any) => {
+        this.message = "New game started! Good luck!";
+        this.score = game.score;
+        this.userAnswer = '';  // Reset the answer
+        this.getNextQuestion();  // Fetch the first question for the new game
       },
       error => {
-          console.error('Error submitting answer', error);
-          this.message = "Error submitting the answer!";
+        console.error('Error starting new game', error);
+        this.message = "Error starting a new game!";
       }
+    );
+  }  
+
+// Called when the user submits an answer
+submitAnswer(): void {
+  if (!this.userAnswer) {
+    this.message = "Please provide an answer.";
+    return;
+  }
+
+  this.gameService.submitAnswer(this.username, this.userAnswer).subscribe(
+    (data: any) => {
+      const gameResponse = data.value;
+      this.score = gameResponse.game.score
+      if(gameResponse.isCorrectAnswer){
+        this.message = "Correct! Next question:";
+        this.getNextQuestion();
+      } else {
+        this.correctAnswer = gameResponse.CorrectAnswer;;
+        console.log(gameResponse);
+        this.message = `Incorrect! Game over. The correct answer was ${this.correctAnswer}.`;
+      }
+    },
+    error => {
+      console.error('Error submitting answer', error);
+      this.message = "Error submitting the answer!";
+    }
   );
- }  
+}
+
 }

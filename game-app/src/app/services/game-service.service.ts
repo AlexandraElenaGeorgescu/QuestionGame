@@ -29,7 +29,9 @@ export class GameService {
     const payload = { username: username, answer: userAnswer };
     return this.http.post(`${this.baseUrl}/play`, JSON.stringify(payload), this.httpOptions);
 }
-
+  startGame(username: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/new-play`, JSON.stringify(username), this.httpOptions);
+}
   getNextQuestion(username: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/next-question/${username}`, this.httpOptions);
   }

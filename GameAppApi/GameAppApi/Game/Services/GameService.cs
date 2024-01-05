@@ -66,7 +66,6 @@ namespace GameAppApi.Game.Services
             await _games.DeleteOneAsync(game => game.Id == gameIn.Id);
             Notify(gameIn, true);
         }
-
         public async Task Remove(string id)
         {
             await _games.DeleteOneAsync(game => game.Id.ToString() == id); ;
@@ -90,8 +89,9 @@ namespace GameAppApi.Game.Services
 
             if (currentQuestion == null)
             {
+                var lastQuestion = await _questionService.GetQuestionByIndex(game.CurrentQuestionIndex - 1);
                 Notify(game, true); // No more questions, game ends.
-                return new PlayGameResponse { Game = game, IsCorrectAnswer = isCorrect };
+                return new PlayGameResponse { Game = game, IsCorrectAnswer = isCorrect, CorrectAnswer = lastQuestion.CorrectAnswer };
             }
 
             if (currentQuestion.CorrectAnswer.Equals(userAnswer, StringComparison.OrdinalIgnoreCase))
@@ -99,6 +99,7 @@ namespace GameAppApi.Game.Services
                 game.Score++; // Increase score
                 game.CurrentQuestionIndex++; // Move to next question
                 isCorrect = true;
+                await _games.ReplaceOneAsync(g => g.Id == game.Id, game);
             }
             else
             {
@@ -108,7 +109,43 @@ namespace GameAppApi.Game.Services
             await _games.ReplaceOneAsync(g => g.Id == game.Id, game); // Update the game state
             return new PlayGameResponse { Game = game, IsCorrectAnswer = isCorrect };
         }
+        public async Task<GameObj> StartNewGame(string username)
+        {
+            var existingGame = await _games.Find<GameObj>(g => g.Username == username).FirstOrDefaultAsync();
 
+            if (existingGame != null)
+            {
+                // Reset the score and question index for the existing game
+                existingGame.Score = 0;
+                existingGame.CurrentQuestionIndex = 0;
+
+                // Update the existing game in the database
+                await _games.ReplaceOneAsync(g => g.Id == existingGame.Id, existingGame);
+
+                // Notify observers that a new game has started
+                Notify(existingGame, false);
+
+                return existingGame;
+            }
+            else
+            {
+                // Create a new game object for the user
+                var newGame = new GameObj
+                {
+                    Username = username,
+                    Score = 0,
+                    CurrentQuestionIndex = 0,
+                };
+
+                // Insert the new game into the database
+                await _games.InsertOneAsync(newGame);
+
+                // Notify observers that a new game has started
+                Notify(newGame, false);
+
+                return newGame;
+            }
+        }
         public async Task<ActionResult> GetNextQuestionForUser(string username)
         {
             var game = await EnsureGameExists(username);

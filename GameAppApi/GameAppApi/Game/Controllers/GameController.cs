@@ -58,8 +58,16 @@ namespace GameAppApi.Game.Controllers
         public async Task<ActionResult<GameObj>> PlayGame([FromBody] PlayGameRequest request)
         {
             var game = await _gameService.PlayGame(request.Username, request.Answer);
+            
             return Ok(game);
         }
+
+        [HttpPost("new-play")]
+        public async Task<ActionResult<GameObj>> StartNewGame([FromBody] string username)
+        {
+            return await _gameService.StartNewGame(username);
+        }
+
 
     }
 }
