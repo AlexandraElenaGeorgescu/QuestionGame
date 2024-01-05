@@ -1,5 +1,6 @@
-﻿using GameAppApi.Authentification.Models;
-using GameAppApi.Authentification.Services;
+﻿using GameAppApi.API.PublicModels;
+using GameAppApi.Authentification.Models;
+using GameAppApi.Authentification.PublicServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
@@ -50,11 +51,11 @@ namespace GameAppApi.Authentification.Controllers
 
             if (user.Role == Role.Moderator)
             {
-                return Ok(new { message = "Logged in as moderator", user.Role });
+                return Ok(new { message = "Logged in as moderator", user.Role, userData = user });
             }
             else if (user.Role == Role.Player)
             {
-                return Ok(new { message = "Logged in as player", user.Role });
+                return Ok(new { message = "Logged in as player", user.Role, userData = user });
             }
 
             return BadRequest("Role not recognized.");

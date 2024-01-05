@@ -1,10 +1,11 @@
-﻿using GameAppApi.Authentification.DatabaseSettings;
+﻿using GameAppApi.API.DatabaseSettings;
+using GameAppApi.API.PublicModels;
 using GameAppApi.Authentification.Models;
 using MongoDB.Driver;
 
-namespace GameAppApi.Authentification.Services
+namespace GameAppApi.Authentification.PublicServices
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IMongoCollection<User> _users;
 
@@ -34,7 +35,7 @@ namespace GameAppApi.Authentification.Services
                 {
                     Id = Guid.NewGuid(),
                     Username = username,
-                    Password = password, 
+                    Password = password,
                     Role = Role.Moderator
                 });
             }

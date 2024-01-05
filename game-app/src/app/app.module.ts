@@ -14,18 +14,21 @@ import { ErasePlayerComponentComponent } from './components/erase-player-compone
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './services/auth-service.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardAdminComponent } from './components/dashboard-admin/dashboard-admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponentComponent,
     GameComponentComponent,
-    ScoreComponentComponent,
     TimerComponentComponent,
     EndGameComponentComponent,
     LogoutComponentComponent,
     ReportPlayerComponentComponent,
-    ErasePlayerComponentComponent
+    ErasePlayerComponentComponent,
+    DashboardComponent,
+    DashboardAdminComponent
   ],
   imports: [
     BrowserModule,

@@ -24,7 +24,7 @@ export class AuthComponentComponent {
       success => {
         // Navigate based on role
         if (success.role === 'Moderator') {
-          this.router.navigate(['/moderator-dashboard']);
+          this.router.navigate(['/dashboard-admin']);
         } else {
           this.router.navigate(['/dashboard']);
         }
@@ -38,6 +38,9 @@ export class AuthComponentComponent {
               console.log('Registration successful', success);
               this.router.navigate(['/dashboard']);
             },
+            error => {
+              console.error('Registration failed', error);
+            }
           );
         }
       }

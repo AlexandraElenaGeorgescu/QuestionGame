@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Options;
-using GameAppApi.Authentification.DatabaseSettings;
-using GameAppApi.Authentification.Services;
+using GameAppApi.API.DatabaseSettings;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using GameAppApi.Game.Services;
+using GameAppApi.Authentification.PublicServices;
+using GameAppApi.UserAdministration.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,10 @@ builder.Services.AddSingleton<IMongoDBSettings>(sp => sp.GetRequiredService<IOpt
 
 // Register your UserService
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<QuestionService>();
+builder.Services.AddScoped<AdminService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>

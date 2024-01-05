@@ -1,10 +1,16 @@
 <div class="login-form-container">
-  <form (ngSubmit)="onSubmit()"> 
-    <input type="text" [(ngModel)]="user.username" name="username" placeholder="Username" required>
-    <input type="password" [(ngModel)]="user.password" name="password" placeholder="Password" required>
-    <div>
-      <input type="checkbox" [(ngModel)]="isModerator" name="isModerator"> Log in as moderator
+  <form (ngSubmit)="onSubmit()" class="login-form"> 
+    <div class="input-group">
+      <input type="text" [(ngModel)]="user.username" name="username" placeholder="Username" required>
     </div>
-    <button type="submit">Login</button> 
+    <div class="input-group">
+      <input type="password" [(ngModel)]="user.password" name="password" placeholder="Password" required>
+    </div>
+    <div class="checkbox-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="isModerator" name="isModerator"> Log in as moderator
+      </label>
+    </div>
+    <button type="submit" class="login-button">Login</button> 
   </form>
 </div>

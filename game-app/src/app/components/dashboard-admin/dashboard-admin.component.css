@@ -1,0 +1,55 @@
+/* dashboard-admin.component.css */
+div {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ff6b6b; /* Soft red border */
+    border-radius: 8px;
+    background-color: #fff; /* White background */
+    box-shadow: 0 2px 4px rgba(255, 107, 107, .3); /* Soft red shadow */
+}
+  
+form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+  
+input {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ff6b6b; /* Soft red border */
+    border-radius: 4px;
+    color: #333; /* Dark text color for better readability */
+}
+  
+button {
+    padding: 10px;
+    background-color: #ff6b6b; /* Soft red background */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+  
+button:hover {
+    background-color: #e63946; /* Darker shade of red on hover */
+}
+
+/* Additional Styling for other elements like lists, errors, etc. */
+ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0;
+}
+
+li {
+    padding: 10px 0; /* Space out list items */
+    border-bottom: 1px solid #ffcccc; /* Light red border for each item */
+}
+
+.errorMessage {
+    color: #e63946; /* Red color for error messages */
+    font-weight: bold;
+}

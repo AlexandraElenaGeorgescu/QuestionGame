@@ -1,0 +1,23 @@
+<div>
+    <h2>Admin Dashboard</h2>
+  
+    <!-- Form to create new questions -->
+    <form (ngSubmit)="createQuestion()">
+      <input type="text" [(ngModel)]="newQuestion.text" name="text" placeholder="Question Text" required>
+      <input type="text" [(ngModel)]="newQuestion.correctAnswer" name="correctAnswer" placeholder="Correct Answer" required>
+      <button type="submit">Create Question</button>
+    </form>
+  
+    <!-- List of all questions with delete option -->
+    <div *ngFor="let question of questions">
+      <p>{{ question.text }}</p>
+      <button (click)="deleteQuestion(question.id)">Delete</button>
+    </div>
+  
+    <!-- List of all users with delete option -->
+    <div *ngFor="let user of users">
+        <p>{{ user.username }}</p>
+        <button (click)="deletePlayer(user.id)">Delete</button>
+      </div>
+</div>
+  

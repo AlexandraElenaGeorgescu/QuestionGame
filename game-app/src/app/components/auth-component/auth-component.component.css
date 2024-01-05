@@ -1,60 +1,67 @@
-/* auth-component.component.css */
 .login-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f4f7f6;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 300px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: white;
+  background-image: linear-gradient(to bottom right, #ffffff, #ffe5e5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  border: 1px solid #ffcccc; /* Light red border */
 }
 
-form {
-  background: white;
-  max-width: 400px;
-  width: 100%;
-  padding: 2em;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.login-form-container form {
+  display: flex;
+  flex-direction: column;
 }
 
 input[type="text"],
 input[type="password"] {
-  width: 100%;
-  padding: 10px 15px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 15px;
+  margin: 10px 0;
+  border: 2px solid #ffcccc; /* Light red border */
+  border-radius: 8px;
   box-sizing: border-box;
+  font-size: 16px; /* Larger font size */
+  transition: border-color 0.3s ease; /* Smooth transition for focus */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #d32f2f; /* Darker border on focus */
 }
 
 input[type="checkbox"] {
-  margin-right: 5px;
+  margin-right: 10px;
 }
 
+input[type="submit"],
 button {
-  width: 100%;
-  padding: 10px 15px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #5e72e4;
+  padding: 12px;
+  margin-top: 15px; /* Add space above the button */
+  font-size: 16px; /* Larger font size */
+  background: linear-gradient(to right, #d32f2f, #b71c1c); /* Red gradient */
   color: white;
-  font-size: 16px;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
 }
 
-button:hover,
-button:focus {
-  background-color: #3e54b3;
+input[type="submit"]:hover,
+button:hover {
+  background: linear-gradient(to right, #b71c1c, #900); /* Darker gradient on hover */
+  transform: translateY(-2px); /* Slight lift */
 }
 
-button[type="button"] {
-  background-color: #48bb78;
-  margin-top: 20px;
+div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-button[type="button"]:hover,
-button[type="button"]:focus {
-  background-color: #3b9462;
+::placeholder {
+  color: #b71c1c; /* Placeholder text color */
+  opacity: 1;
 }

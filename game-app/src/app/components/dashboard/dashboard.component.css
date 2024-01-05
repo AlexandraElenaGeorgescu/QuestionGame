@@ -1,0 +1,50 @@
+.dashboard-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h1 {
+    color: #d32f2f;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: #333;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  button {
+    padding: 10px 25px;
+    font-size: 1rem;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 0 10px;
+  }
+  
+  button:first-child {
+    background-color: #d32f2f; /* Red */
+  }
+  
+  button:last-child {
+    background-color: #555; /* Dark */
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
