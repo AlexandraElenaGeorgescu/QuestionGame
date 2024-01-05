@@ -36,14 +36,30 @@ namespace GameAppApi.Game.Controllers
             return CreatedAtRoute("GetGame", new { id = game.Id.ToString() }, game);
         }
 
-        [HttpPost("play")]
-        public async Task<ActionResult<GameObj>> PlayGame([FromBody] dynamic payload)
+        [HttpGet("next-question/{username}")]
+        public async Task<ActionResult<Question>> GetNextQuestion(string username)
         {
-            string username = payload.username;
-            string userAnswer = payload.answer; // Assuming the answer is passed in the payload
+            var game = await _gameService.Get(username);
+            if (game == null)
+            {
+                return NotFound("Game not found for this user.");
+            }
 
-            var game = await _gameService.PlayGame(username, userAnswer);
+            var question = await _gameService.GetNextQuestionForUser(username);
+            if (question == null)
+            {
+                return NotFound("No more questions available.");
+            }
+
+            return Ok(question);
+        }
+
+        [HttpPost("play")]
+        public async Task<ActionResult<GameObj>> PlayGame([FromBody] PlayGameResponse request)
+        {
+            var game = await _gameService.PlayGame(request.Username, request.Answer);
             return Ok(game);
         }
+
     }
 }

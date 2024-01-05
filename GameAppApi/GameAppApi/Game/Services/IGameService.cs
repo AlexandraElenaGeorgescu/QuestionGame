@@ -1,4 +1,5 @@
 ﻿using GameAppApi.Game.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,5 +13,8 @@ namespace GameAppApi.Game.Services
         Task Update(string id, GameObj gameIn);
         Task Remove(GameObj gameIn);
         Task Remove(string id);
+        public Task<ActionResult<PlayGameResponse>> PlayGame(string username, string userAnswer);
+
+
     }
 }

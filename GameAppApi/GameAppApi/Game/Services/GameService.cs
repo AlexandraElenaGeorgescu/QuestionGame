@@ -1,5 +1,6 @@
 ﻿using GameAppApi.API.DatabaseSettings;
 using GameAppApi.Game.Models;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -70,35 +71,59 @@ namespace GameAppApi.Game.Services
         {
             await _games.DeleteOneAsync(game => game.Id.ToString() == id); ;
         }
-
-        public async Task<GameObj> PlayGame(string username, string userAnswer)
+        public async Task<GameObj> EnsureGameExists(string username)
         {
             var game = await _games.Find<GameObj>(g => g.Username == username).FirstOrDefaultAsync();
-
             if (game == null)
             {
-                // If the game doesn't exist, create a new one
-                game = new GameObj { Username = username, Score = 0, QuestionIndex = 0 };
+                game = new GameObj { Username = username, Score = 0, CurrentQuestionIndex = 0 };
                 await _games.InsertOneAsync(game);
             }
+            return game;
+        }
 
-            var currentQuestion = await _questionService.Get(game.CurrentQuestionId);
+        public async Task<ActionResult<PlayGameResponse>> PlayGame(string username, string userAnswer)
+        {
+            var game = await EnsureGameExists(username);
+            var currentQuestion = await _questionService.GetQuestionByIndex(game.CurrentQuestionIndex);
+            var isCorrect = false; // Default to false
 
-            bool correctAnswer = currentQuestion.CorrectAnswer.Equals(userAnswer, StringComparison.OrdinalIgnoreCase);
+            if (currentQuestion == null)
+            {
+                Notify(game, true); // No more questions, game ends.
+                return new PlayGameResponse { Game = game, IsCorrectAnswer = isCorrect };
+            }
 
-            if (correctAnswer)
+            if (currentQuestion.CorrectAnswer.Equals(userAnswer, StringComparison.OrdinalIgnoreCase))
             {
                 game.Score++; // Increase score
-                game.QuestionIndex++; // Move to next question
-                await _games.ReplaceOneAsync(g => g.Id == game.Id, game);
+                game.CurrentQuestionIndex++; // Move to next question
+                isCorrect = true;
             }
             else
             {
-                // End the game and notify observers
-                Notify(game, true); // gameEnded is true
+                Notify(game, true); // Wrong answer, game ends.
             }
 
-            return game;
+            await _games.ReplaceOneAsync(g => g.Id == game.Id, game); // Update the game state
+            return new PlayGameResponse { Game = game, IsCorrectAnswer = isCorrect };
         }
+
+        public async Task<ActionResult> GetNextQuestionForUser(string username)
+        {
+            var game = await EnsureGameExists(username);
+
+            var totalQuestions = await _questionService.CountQuestions();
+            if (game.CurrentQuestionIndex >= totalQuestions)
+            {
+                // No more questions left to answer, player has won the game.
+                return new JsonResult(new { Message = "Congratulations! You've answered all questions correctly and won the game!" });
+            }
+
+            var nextQuestion = await _questionService.GetQuestionByIndex(game.CurrentQuestionIndex);
+
+            return new JsonResult(nextQuestion);
+        }
+
     }
 }

@@ -5,4 +5,7 @@
     Task<Question> Create(Question question);
     Task Update(string id, Question questionIn);
     Task Remove(string id);
+    public Task<Question> GetQuestionByIndex(int index);
+    public Task<long> CountQuestions();
+
 }

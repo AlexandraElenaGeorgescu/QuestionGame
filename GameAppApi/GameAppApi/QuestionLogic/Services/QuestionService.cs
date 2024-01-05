@@ -1,5 +1,6 @@
 ﻿using GameAppApi.API.DatabaseSettings;
 using GameAppApi.Game.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,8 +23,17 @@ public class QuestionService: IQuestionService
 
     public async Task<Question> Get(string id)
     {
-        return await _questions.Find<Question>(question => question.Id.ToString() == id).FirstOrDefaultAsync();
+        if (Guid.TryParse(id, out Guid guidId))
+        {
+            var filter = Builders<Question>.Filter.Eq(q => q.Id, guidId);
+            return await _questions.Find(filter).FirstOrDefaultAsync();
+        }
+        else
+        {
+            throw new ArgumentException("Invalid GUID format.");
+        }
     }
+
 
     public async Task<Question> Create(Question question)
     {
@@ -33,11 +43,39 @@ public class QuestionService: IQuestionService
 
     public async Task Update(string id, Question questionIn)
     {
-        await _questions.ReplaceOneAsync(question => question.Id.ToString() == id, questionIn);
+        if (Guid.TryParse(id, out Guid guidId))
+        {
+            var filter = Builders<Question>.Filter.Eq(q => q.Id, guidId);
+            await _questions.ReplaceOneAsync(filter, questionIn);
+        }
+        else
+        {
+            throw new ArgumentException("Invalid GUID format.");
+        }
     }
+
 
     public async Task Remove(string id)
     {
-        await _questions.DeleteOneAsync(question => question.Id.ToString() == id);
+        if (Guid.TryParse(id, out Guid guidId))
+        {
+            // Convert the Guid to MongoDB Bson binary data
+            var filter = Builders<Question>.Filter.Eq(q => q.Id, guidId);
+            await _questions.DeleteOneAsync(filter);
+        }
+        else
+        {
+            throw new ArgumentException("Invalid GUID format.");
+        }
     }
+    public async Task<long> CountQuestions()
+    {
+        return await _questions.CountDocumentsAsync(new BsonDocument());
+    }
+
+    public async Task<Question> GetQuestionByIndex(int index)
+    {
+        return await _questions.Find(new BsonDocument()).Skip(index).FirstOrDefaultAsync();
+    }
+
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameAppApi.UserAdministration.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private readonly AdminService _adminService;

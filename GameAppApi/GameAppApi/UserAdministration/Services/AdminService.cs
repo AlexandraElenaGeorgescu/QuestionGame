@@ -1,5 +1,6 @@
 ﻿using GameAppApi.API.DatabaseSettings;
 using GameAppApi.API.PublicModels;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GameAppApi.UserAdministration.Services
@@ -20,12 +21,32 @@ namespace GameAppApi.UserAdministration.Services
         }
         public async Task<User> GetUserById(string id)
         {
-            return await _users.Find<User>(user => user.Id.ToString() == id).FirstOrDefaultAsync();
+            if (Guid.TryParse(id, out Guid guidId))
+            {
+                // Convert the Guid to MongoDB Bson binary data
+                var filter = Builders<User>.Filter.Eq(u => u.Id, guidId);
+                return await _users.Find(filter).FirstOrDefaultAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Invalid GUID format.");
+            }
         }
 
         public async Task Remove(string id)
         {
-            await _users.DeleteOneAsync(user => user.Id.ToString() == id);
+            if (Guid.TryParse(id, out Guid guidId))
+            {
+                // Convert the Guid to MongoDB Bson binary data
+                var filter = Builders<User>.Filter.Eq(u => u.Id, guidId);
+                await _users.DeleteOneAsync(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid GUID format.");
+            }
         }
+
+
     }
 }
