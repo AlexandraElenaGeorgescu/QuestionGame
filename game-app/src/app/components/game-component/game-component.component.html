@@ -1,8 +1,9 @@
 <!-- game.component.html -->
-<div>
-    <h2>{{ currentQuestion?.text }}</h2>
+<div class="game-container">
+  <div class="app-game">
+    <h2>{{ currentQuestion.text }}</h2>
     <input type="text" [(ngModel)]="userAnswer">
     <button (click)="submitAnswer()">Submit Answer</button>
     <p>{{ message }}</p>
   </div>
-  
+</div>

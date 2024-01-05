@@ -1,0 +1,65 @@
+/* Container for the entire game component */
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #fff; /* White background */
+    font-family: 'Arial', sans-serif;
+}
+
+/* The game box */
+.app-game {
+    width: 100%;
+    max-width: 400px; /* Adjust as needed */
+    margin: 0 20px;
+    padding: 30px;
+    background-color: #fff; /* White background */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 10px;
+    text-align: center; /* Centering content */
+}
+
+/* Question text */
+h2 {
+    font-size: 1.5em;
+    color: #d9534f; /* Red text */
+    margin-bottom: 20px;
+}
+
+/* Input field */
+input[type="text"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd; /* Light grey border */
+    border-radius: 4px;
+}
+
+/* Submit button */
+button {
+    width: 100%;
+    padding: 10px;
+    color: #fff; /* White text */
+    background-color: #d9534f; /* Red background */
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #c9302c; /* Slightly darker red on hover */
+}
+
+/* Message text */
+p {
+    font-size: 1em;
+    color: #666; /* Dark grey text */
+    background-color: #f9f9f9; /* Very light grey background */
+    padding: 15px;
+    border: 1px solid #eee; /* Light grey border */
+    border-radius: 4px;
+    margin-top: 20px;
+}

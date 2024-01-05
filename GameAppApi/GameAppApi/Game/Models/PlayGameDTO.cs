@@ -1,7 +1,8 @@
 ﻿using GameAppApi.Game.Models;
 
-public class PlayGameResponse
+public class PlayGameRequest
 {
-    public GameObj Game { get; set; }
-    public bool IsCorrectAnswer { get; set; }
+    public string Username { get; set; }
+    public string Answer { get; set; }
 }
+

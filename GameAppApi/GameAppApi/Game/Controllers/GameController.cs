@@ -55,7 +55,7 @@ namespace GameAppApi.Game.Controllers
         }
 
         [HttpPost("play")]
-        public async Task<ActionResult<GameObj>> PlayGame([FromBody] PlayGameResponse request)
+        public async Task<ActionResult<GameObj>> PlayGame([FromBody] PlayGameRequest request)
         {
             var game = await _gameService.PlayGame(request.Username, request.Answer);
             return Ok(game);
