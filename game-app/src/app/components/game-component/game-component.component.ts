@@ -82,13 +82,12 @@ submitAnswer(): void {
   this.gameService.submitAnswer(this.username, this.userAnswer).subscribe(
     (data: any) => {
       const gameResponse = data.value;
-      this.score = gameResponse.game.score
+      this.correctAnswer = gameResponse.game.correctAnswer;
       if(gameResponse.isCorrectAnswer){
         this.message = "Correct! Next question:";
-        this.score = this.score + 1;
         this.getNextQuestion();
       } else {
-        this.message = `Incorrect! Game over. The correct answer was ${this.score}.`;
+        this.message = `Incorrect! Game over. The correct answer was ${this.currentQuestion.correctAnswer}.`;
       }
     },
     error => {
