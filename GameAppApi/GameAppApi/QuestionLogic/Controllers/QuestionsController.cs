@@ -16,7 +16,9 @@ public class QuestionsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Question>>> GetQuestions()
     {
-        return await _questionService.Get();
+        var questions = await _questionService.Get();
+        return Ok(questions);
+
     }
 
     // POST: api/Questions
