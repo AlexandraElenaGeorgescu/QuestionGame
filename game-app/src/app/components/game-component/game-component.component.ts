@@ -85,11 +85,10 @@ submitAnswer(): void {
       this.score = gameResponse.game.score
       if(gameResponse.isCorrectAnswer){
         this.message = "Correct! Next question:";
+        this.score = this.score + 1;
         this.getNextQuestion();
       } else {
-        this.correctAnswer = gameResponse.CorrectAnswer;;
-        console.log(gameResponse);
-        this.message = `Incorrect! Game over. The correct answer was ${this.correctAnswer}.`;
+        this.message = `Incorrect! Game over. The correct answer was ${this.score}.`;
       }
     },
     error => {
